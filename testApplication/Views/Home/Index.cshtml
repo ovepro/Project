@@ -1,0 +1,56 @@
+﻿
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+
+<label>&nbsp;</label>
+
+<html>
+<head>
+</head>
+<body>
+    <input type="text" id="search" class="form-control" /><br />
+    <input type="button" id="btnSearch" value="Search" class="form-control; btn btn-primary" /><br /><br />
+    <strong>Largest City is : </strong>&nbsp;<span id="largestCity" class="form-control"></span> <br />
+    <strong>Capital City is :</strong> &nbsp;<span id="capital" class="form-control"></span>
+
+    <script type="text/javascript">
+
+        var obj, i, j, x, y,name,value = "";
+        $(function () {
+            $('#btnSearch').click(function () {
+                //alert("clicked");
+                $(document).ready(function () {
+                    $.ajax({
+                        url: '@Url.Action("searchMethod","Home")',
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function (root1) {
+                            var root = JSON.stringify(root1);
+                            for (var i = 0; i < root1.RestResponse.result.length; i++) {
+                                //debug jsonobject to console
+                                //console.log(JSON.stringify(root1.RestResponse.result[i]));
+                                var serachByStateName = root1.RestResponse.result[i].name.toUpperCase();
+                                var serachByStateAbbr = root1.RestResponse.result[i].abbr.toUpperCase();
+                                var searchInput = $('#search').val().toUpperCase();
+
+                                if (serachByStateName == searchInput || serachByStateAbbr == searchInput) {
+                                alert("Your search results for " + searchInput + " are below");
+                                var capital = root1.RestResponse.result[i].capital;
+                                var largestCity = root1.RestResponse.result[i].largest_City;
+                                $('#largestCity').text(largestCity);
+                                $('#capital').text(capital);
+                            }
+
+                            }
+                        }
+                    });
+                });
+            })
+        })
+    </script>
+</body>
+
+</html>
